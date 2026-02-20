@@ -1,4 +1,4 @@
-# Cathode-AGSL: Advanced CRT & Thermal Simulation Engine
+# Cathode-AGSL: Advanced CRT Simulation Engine
 
 
 
