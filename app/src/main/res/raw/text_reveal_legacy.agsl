@@ -1,0 +1,60 @@
+uniform shader composable;
+uniform float2 cursor;
+uniform float radius;
+uniform float time;
+uniform float laserIntensity;
+
+// --- PARAMETRES TWEAKABLES ---
+const half3 COLOR_IDLE = half3(0.4, 0.45, 0.5);
+const half3 COLOR_NEON = half3(0.0, 0.6, 1.0);
+const half3 COLOR_HOT  = half3(1.0, 1.0, 1.0);
+const float BLOOM_PWR  = 0.4;
+const float CORE_PWR   = 8.0;
+const float TRAIL_LENGTH = 150.0;
+
+//  Paramètres Plasma
+const float DISTORT_STRENGTH = 4.0; // Puissance de la torsion (en pixels)
+const float WAVE_SPEED = 10.0;      // Vitesse de l'oscillation
+// -----------------------------
+
+half4 main(float2 fragCoord) {
+    // 1. CALCUL DE LA CHALEUR (On le fait avant pour savoir si on doit distordre)
+    float d = distance(fragCoord, cursor);
+    float spatialHeat = exp(-(d * d) / (radius * radius * 0.5));
+    float horizontalHeat = 0.0;
+    float distY = abs(fragCoord.y - cursor.y);
+
+    if (distY < radius && fragCoord.x < cursor.x) {
+        float distX = cursor.x - fragCoord.x;
+        horizontalHeat = exp(-distX / TRAIL_LENGTH);
+        horizontalHeat *= (1.0 - smoothstep(0.0, radius, distY));
+    }
+
+    float heat = max(spatialHeat, horizontalHeat) * laserIntensity;
+
+    // 2. DISTORSION DE PLASMA
+    // On crée un décalage basé sur un sinus, proportionnel à la chaleur
+    // Plus c'est chaud, plus ça ondule.
+    float wave = sin(fragCoord.y * 0.1 + time * WAVE_SPEED) * cos(fragCoord.x * 0.1 + time * WAVE_SPEED);
+    float distort = wave * DISTORT_STRENGTH * heat;
+
+    // On récupère la couleur du texte avec les coordonnées déformées
+    half4 color = composable.eval(fragCoord + float2(distort, distort * 0.5));
+
+    if (color.a <= 0.0) return color;
+
+    // 3. RENDU DES COULEURS (Inchangé mais appliqué sur le texte distordu)
+    half3 surface = mix(COLOR_IDLE, COLOR_NEON, heat);
+    surface = mix(surface, COLOR_HOT, pow(heat, CORE_PWR));
+
+    float bloom = exp(-d / (radius * 1.2)) * laserIntensity;
+    half3 glow = COLOR_NEON * bloom * BLOOM_PWR;
+
+    color.rgb = surface + glow;
+
+    // Scintillement
+    float flick = fract(sin(dot(fragCoord * 0.1, float2(time))) * 43758.5453);
+    color.rgb *= (1.0 - (0.03 * laserIntensity) + (0.03 * laserIntensity) * flick);
+
+    return color;
+}
