@@ -16,13 +16,13 @@ Unlike traditional "overlay" filters, this engine transforms flat digital interf
 
 --
 
-| CRT + text Laser displayer shaders   | CRT shader over text (scroll demo) | Text laser reveal shader demo |
-|:---:|:---:|:---:|
-| ![P1](screenshots/cathodedemo2.gif) | ![P2](screenshots/cathodedemo1.gif) | ![P3](screenshots/cathodedemo6.gif) |
+| CRT + text Laser displayer shaders   | CRT shader over text (scroll demo) | CRT shader single picture with edgy config | Thermal Reveal Sub-Shader |
+|:---:|:---:|:---:|:---:|
+| ![P1](screenshots/cathodedemo2.gif) | ![P2](screenshots/cathodedemo1.gif) | ![P3](screenshots/cathodedemo5.gif) | ![P4](screenshots/cathodedemo6.gif) |
 
-| CRT shader over pictures gallery | CRT shader with fast tweak panel | CRT shader single picture edgy config |
-|:---:|:---:|:---:|
-| ![P4](screenshots/cathodedemo3.gif) | ![P5](screenshots/cathodedemo4.gif) | ![P6](screenshots/cathodedemo5.gif) |
+| CRT shader over pictures gallery | CRT shader fast tweak panel | Signal Jitter & H-Sync Instability | Spherical Lens Distortion |
+|:---:|:---:|:---:|:---:|
+| ![P5](screenshots/cathodedemo3.gif) | ![P6](screenshots/cathodedemo4.gif) | ![P7](screenshots/cathodedemo7.gif) | ![P8](screenshots/cathodedemo8.gif) |
 
 
 ---
