@@ -76,6 +76,7 @@ fun CathodeGalleryScreen(
             R.drawable.img_demo_4,
             R.drawable.img_demo_5,
             R.drawable.img_demo_6,
+            R.drawable.img_demo_8,
             R.drawable.img_demo_7
         )
     }
