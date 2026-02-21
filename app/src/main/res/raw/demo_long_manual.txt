@@ -1,0 +1,80 @@
+[SYSTEM] ACCESSING KERNEL DOCUMENTATION...
+[  OK  ] CHAPTER 1: THE CATHODE PROTOCOL v3.0
+
+-----------------------------------------------------------
+        #########[ OPERATING MANUAL ]#########
+                     >> SECTION: AGSL_CORE <<
+-----------------------------------------------------------
+
+1. INTRODUCTION
+Ce document détaille les procédures d'alignement du canon à électrons.
+Toute erreur de manipulation peut entraîner une instabilité du signal.
+
+[ INFO ] ANALOG_SPECIFICATIONS:
+- Fréquence de rafraîchissement : 120Hz (HARDWARE_LOCKED)
+- Résolution native : 320x240 (EMULATED)
+- Phosphore : P4 Green / Cobalt Blue Mix
+
+[ DIAG ] OPTICAL_ALIGNMENT_PROCEDURE:
+Pour calibrer la courbure, ajustez la variable FISH_EYE_STRENGTH.
+Une valeur de 0.90 est recommandée pour les dalles incurvées.
+
+[ RUN  ] Loading Sub-routines...
+[ RUN  ] [##########..........] 50%
+[  OK  ] Sub-routines loaded.
+
+2. SHADER_PIPELINE_ARCHITECTURE
+Le pipeline se décompose en trois couches distinctes :
+
+  A. THERMAL_REVEAL_STAGE
+  C'est ici que le texte est gravé. Chaque caractère subit une
+  distorsion thermique. Plus le curseur reste sur une zone, plus
+  la valeur "heat" augmente.
+
+  [ DUMP ] THERMAL_REGISTER_SNAPSHOT:
+  0x00A1: FF FF 00 21 -> CORE_TEMP: HOT
+  0x00B2: 00 12 A4 B8 -> TRAIL_STRENGTH: MEDIUM
+
+  [ WARN ] ATTENTION : Une surchauffe prolongée à 0x00D4 peut
+  provoquer une rémanence permanente sur le phosphore (Burn-in).
+
+  B. CRT_LENS_STAGE
+  L'image plate est ensuite projetée dans une sphère virtuelle.
+  L'aberration chromatique sépare les flux RVB de 6.0 pixels.
+
+-----------------------------------------------------------
+        ######### [ MAINTENANCE LOGS ] #########
+-----------------------------------------------------------
+
+[ INFO ] Last maintenance: 2026-02-05
+[ TEST ] Scanning for interference...
+[  OK  ] Interference level: 0.002% (Acceptable)
+
+[SYSTEM] REGISTRY_DUMP:
+[ INFO ] root@retroscreen has modified 'jitter_generator'
+[ INFO ] root@retroscreen has enabled 'anaglyph_multiplexer'
+[ WARN ] WARNING: Unsigned driver detected for 120Hz_Sync.
+
+3. TROUBLESHOOTING_GUIDE
+Si l'image tremble violemment :
+1. Vérifiez la GLOBAL_JITTER_CHANCE (actuellement 0.005).
+2. Réinitialisez le tampon 0x12a4b8f0.
+
+[ ERROR ] CRITICAL_EXCEPTION_SIMULATION:
+[ TEST ] Injecting fault at sector 7...
+[ WARN ] ERROR: Signal parity failed.
+[ TEST ] Attempting auto-repair...
+[  OK  ] Signal stabilized.
+
+[ WELCOME ] Fin du manuel technique.
+[ WELCOME ] READY FOR COMMAND INPUT.
+
+-----------------------------------------------------------
+        ######### [ SYSTEM_FOOTER ] #########
+-----------------------------------------------------------
+
+[ INFO ] Build: 2026.02.20.REL
+[ INFO ] Kernel: 5.10.0-CATHODE
+[  OK  ] All systems nominal.
+
+root@retroscreen:_
