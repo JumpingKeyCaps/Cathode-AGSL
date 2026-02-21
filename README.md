@@ -6,6 +6,20 @@
 
 Unlike traditional "overlay" filters, this engine transforms flat digital interfaces into an organic, unstable, and immersive analog medium by processing every pixel through a dual-stage **AGSL (Android Graphics Shading Language)** pipeline.
 
+
+--
+
+| CRT + text Laser displayer shaders   | CRT shader over text (scroll demo) |
+|:---:|:---:|
+| ![P1](screenshots/cathodedemo1.gif) | ![P2](screenshots/cathodedemo2.gif) |
+
+| CRT shader over pictures gallery | CRT shader with fast tweak panel |
+|:---:|:---:|
+| ![P1](screenshots/cathodedemo3.gif) | ![P2](screenshots/cathodedemo4.gif) |
+
+
+
+
 ---
 
 ## The Rendering Pipeline
