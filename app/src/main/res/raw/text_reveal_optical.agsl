@@ -1,0 +1,63 @@
+uniform shader composable;
+uniform float2 cursor;
+uniform float radius;
+uniform float time;
+uniform float laserIntensity;
+
+// --- TES PARAMETRES (PUISSANCE ORIGINALE) ---
+const half3 COLOR_IDLE = half3(0.74, 0.75, 0.75);
+const half3 COLOR_NEON = half3(0.0, 0.6, 1.0);
+const half3 COLOR_HOT  = half3(1.0, 1.0, 1.0);
+const float BLOOM_PWR  = 0.1;
+const float CORE_PWR   = 10.0;
+const float TRAIL_LENGTH = 180.0;
+
+// --- LE RETOUR DES POTARDS OPTIQUES ---
+const float DISTORT_STRENGTH = 25.0;
+const float CHROMATIC_SHIFT = 1.5;
+const float WAVE_SPEED = 2.3;
+// --------------------------------------------
+
+half4 main(float2 fragCoord) {
+    // 1. Physique du laser (Inchangée)
+    float d = distance(fragCoord, cursor);
+    float spatialHeat = exp(-(d * d) / (radius * radius * 0.4));
+    float horizontalHeat = 0.0;
+    float distY = abs(fragCoord.y - cursor.y);
+
+    if (distY < radius && fragCoord.x < cursor.x) {
+        float distX = cursor.x - fragCoord.x;
+        horizontalHeat = exp(-distX / TRAIL_LENGTH);
+        horizontalHeat *= (1.0 - smoothstep(0.0, radius, distY));
+    }
+    float heat = max(spatialHeat, horizontalHeat) * laserIntensity;
+
+    // 2. Distorsion + Aberration Chromatique (Le retour !)
+    float wave = sin(fragCoord.y * 0.15 + time * WAVE_SPEED);
+    float shift = wave * heat;
+
+    // On récupère tes balises avec le triple sampling "glitch"
+    float r = composable.eval(fragCoord + float2(shift * DISTORT_STRENGTH + CHROMATIC_SHIFT * heat, 0.0)).r;
+    float g = composable.eval(fragCoord + float2(shift * DISTORT_STRENGTH, 0.0)).g;
+    float b = composable.eval(fragCoord + float2(shift * DISTORT_STRENGTH - CHROMATIC_SHIFT * heat, 0.0)).b;
+    float a = composable.eval(fragCoord + float2(shift * DISTORT_STRENGTH, 0.0)).a;
+
+    half3 texColor = half3(r, g, b);
+
+    // 3. Calcul de la lumière pure (Le Phare)
+    half3 laserSurface = mix(COLOR_IDLE, COLOR_NEON, heat);
+    laserSurface = mix(laserSurface, COLOR_HOT, pow(heat, CORE_PWR));
+
+    float bloom = exp(-d / (radius * 1.5)) * laserIntensity;
+    half3 glow = COLOR_NEON * bloom * BLOOM_PWR;
+
+    // 4. LE MERGE PROPRE (Adapté pour garder les balises et la distorsion)
+    // On fait briller les lettres quand le laser passe
+    half3 illuminatedText = texColor + (COLOR_HOT * pow(heat, 5.0) * a);
+
+    // On ajoute le laser et le glow
+    half3 finalRGB = illuminatedText + (laserSurface * heat) + glow;
+
+    // 5. ALPHA SOLIDE (Pour le merge avec le container shader sans cercle noir)
+    return half4(finalRGB, 1.0);
+}
