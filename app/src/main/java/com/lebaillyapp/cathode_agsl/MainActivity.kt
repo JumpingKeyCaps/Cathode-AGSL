@@ -67,14 +67,14 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
 
                     //todo - 1 - Text demo
-                   // CathodeComposition(textToLoad = R.raw.demo_stress_test)
+                //    CathodeComposition(textToLoad = R.raw.demo_long_manual)
 
 
                     //todo - 2 - Gallery demo
                     CathodeGalleryScreen()
 
                     //todo - 3 - Mono picture demo
-                   // CathodeMonoPictureComposition()
+                    //CathodeMonoPictureComposition()
 
                     //todo - 4 - Laser demo
                  //   LaserDemoComposition()
