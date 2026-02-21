@@ -15,6 +15,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.lebaillyapp.cathode_agsl.ui.screen.CathodeComposition
 import com.lebaillyapp.cathode_agsl.ui.screen.CathodeGalleryScreen
+import com.lebaillyapp.cathode_agsl.ui.screen.CathodeMonoPictureComposition
 import com.lebaillyapp.cathode_agsl.ui.screen.LaserDemoComposition
 import com.lebaillyapp.cathode_agsl.ui.theme.CathodeAGSLTheme
 import kotlinx.coroutines.delay
@@ -72,7 +73,10 @@ class MainActivity : ComponentActivity() {
                     //todo - 2 - Gallery demo
                     CathodeGalleryScreen()
 
-                    //todo - 3 - Laser demo
+                    //todo - 3 - Mono picture demo
+                   // CathodeMonoPictureComposition()
+
+                    //todo - 4 - Laser demo
                  //   LaserDemoComposition()
 
                 }
