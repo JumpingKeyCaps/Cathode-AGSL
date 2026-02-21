@@ -11,7 +11,7 @@ Unlike traditional "overlay" filters, this engine transforms flat digital interf
 
 | CRT + text Laser displayer shaders   | CRT shader over text (scroll demo) | CRT shader over pictures gallery | CRT shader with fast tweak panel |
 |:---:|:---:|:---:|:---:|
-| ![P1](screenshots/cathodedemo1.gif) | ![P2](screenshots/cathodedemo2.gif) | ![P3](screenshots/cathodedemo3.gif) | ![P4](screenshots/cathodedemo4.gif) |
+| ![P1](screenshots/cathodedemo2.gif) | ![P2](screenshots/cathodedemo1.gif) | ![P3](screenshots/cathodedemo3.gif) | ![P4](screenshots/cathodedemo4.gif) |
 
 
 ---
