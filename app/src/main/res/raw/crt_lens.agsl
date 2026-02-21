@@ -1,0 +1,102 @@
+uniform shader composable;
+uniform float2 size;
+uniform float time;
+
+// --- UNIFORMS (PARAMETRES STABLES DEVENUS POTARDS) ---
+uniform float FISH_EYE_STRENGTH;
+uniform float SCREEN_ZOOM;
+uniform float VIGNETTE_INTENSITY;
+uniform float GRID_OPACITY;
+uniform float GRID_SPACING;
+uniform float SCANLINE_DENSITY;
+uniform float SCANLINE_OPACITY;
+
+// --- UNIFORMS (LES POTARDS DE GLITCH) ---
+uniform float TEXT_ANAGLYPH;
+uniform float GRID_ANAGLYPH;
+uniform float SIGNAL_SHIFT;
+uniform float JITTER_CHANCE;
+uniform float JITTER_INTENSITY;
+uniform float GLOBAL_JITTER_CHANCE;
+uniform float GLOBAL_JITTER_STRENGTH;
+
+// Constantes de couleur (Stables)
+const half3 BG_CENTER_COLOR = half3(0.05, 0.07, 0.12);
+const half3 BG_EDGE_COLOR   = half3(0.01, 0.01, 0.02);
+const half3 GRID_COLOR      = half3(0.0, 0.9, 0.6);
+
+float getGrid(float2 coord) {
+    float2 gridLine = step(0.97, fract(coord / GRID_SPACING));
+    return max(gridLine.x, gridLine.y);
+}
+
+half4 main(float2 fragCoord) {
+    float flicker = 1.0 - (sin(time * 80.0) * 0.02);
+    float aspect = size.x / size.y;
+
+    // 1. GLOBAL JITTER
+    float globalJitter = 0.0;
+    if (fract(sin(time * 20.0) * 43758.5453) < GLOBAL_JITTER_CHANCE) {
+        globalJitter = (fract(time * 100.0) - 0.5) * GLOBAL_JITTER_STRENGTH;
+    }
+
+    // 2. DISTORSION SPHÉRIQUE
+    float2 uv = fragCoord / size.xy;
+    float2 centeredUv = (uv * 2.0 - 1.0) / SCREEN_ZOOM;
+    float2 aspectCorrectedUv = centeredUv;
+    aspectCorrectedUv.x *= aspect;
+
+    float r2 = dot(aspectCorrectedUv, aspectCorrectedUv);
+    float2 distortedCenteredUv = centeredUv * (1.0 + FISH_EYE_STRENGTH * r2);
+
+    float2 baseCoord = (distortedCenteredUv + 1.0) / 2.0 * size.xy;
+    baseCoord.x += globalJitter;
+
+    // 3. LINE JITTER
+    float lineJitter = 0.0;
+    if (fract(sin(dot(float2(time * 15.0, floor(baseCoord.y * 0.1)), float2(12.9898, 78.233))) * 43758.5453) < JITTER_CHANCE) {
+        lineJitter = (fract(time * 50.0) - 0.5) * JITTER_INTENSITY;
+    }
+
+    float2 sourceCoord = baseCoord + float2(lineJitter + SIGNAL_SHIFT, 0.0);
+
+    // 4. ANAGLYPHE TEXTE + LASER
+    float2 tShift = float2(TEXT_ANAGLYPH, 0.0);
+    half4 colR = composable.eval(sourceCoord + tShift);
+    half4 colG = composable.eval(sourceCoord);
+    half4 colB = composable.eval(sourceCoord - tShift);
+
+    half3 laserAndTextRGB = half3(colR.r, colG.g, colB.b);
+
+    // 5. RENDU FOND / TEXTE
+    if (sourceCoord.x < 0.0 || sourceCoord.x > size.x || sourceCoord.y < 0.0 || sourceCoord.y > size.y) {
+        return half4(0.0, 0.0, 0.0, 1.0);
+    }
+
+    half4 color;
+    float brightness = max(laserAndTextRGB.r, max(laserAndTextRGB.g, laserAndTextRGB.b));
+
+    float gradientFactor = smoothstep(0.0, 1.5, r2);
+    half3 backgroundColor = mix(BG_CENTER_COLOR, BG_EDGE_COLOR, gradientFactor);
+
+    color.rgb = mix(backgroundColor, laserAndTextRGB, smoothstep(0.05, 0.15, brightness));
+    color.a = 1.0;
+
+    // 6. GRILLE ANAGLYPHE SÉPARÉE
+    float2 gShift = float2(GRID_ANAGLYPH, 0.0);
+    float gR = getGrid(baseCoord + gShift);
+    float gG = getGrid(baseCoord);
+    float gB = getGrid(baseCoord - gShift);
+
+    float gridMask = 1.0 - smoothstep(0.5, 1.0, brightness);
+    color.rgb += gR * half3(1.0, 0.0, 0.0) * GRID_OPACITY * gridMask;
+    color.rgb += gG * GRID_COLOR * GRID_OPACITY * gridMask;
+    color.rgb += gB * half3(0.0, 0.5, 1.0) * GRID_OPACITY * gridMask;
+
+    // 7. FINITIONS (Scanlines + Vignette)
+    color.rgb -= sin(fragCoord.y * SCANLINE_DENSITY + time * 5.0) * SCANLINE_OPACITY;
+    color.rgb *= flicker;
+    color.rgb *= 1.0 - (length(centeredUv) * VIGNETTE_INTENSITY);
+
+    return color;
+}
