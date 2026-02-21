@@ -15,6 +15,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.lebaillyapp.cathode_agsl.ui.screen.CathodeComposition
 import com.lebaillyapp.cathode_agsl.ui.screen.CathodeGalleryScreen
+import com.lebaillyapp.cathode_agsl.ui.screen.LaserDemoComposition
 import com.lebaillyapp.cathode_agsl.ui.theme.CathodeAGSLTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,11 +66,14 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
 
                     //todo - 1 - Text demo
-                    //CathodeComposition(textToLoad = R.raw.demo_stress_test)
+                   // CathodeComposition(textToLoad = R.raw.demo_stress_test)
 
 
                     //todo - 2 - Gallery demo
                     CathodeGalleryScreen()
+
+                    //todo - 3 - Laser demo
+                 //   LaserDemoComposition()
 
                 }
             }
