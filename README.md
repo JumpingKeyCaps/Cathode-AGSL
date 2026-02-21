@@ -1,5 +1,12 @@
 # Cathode-AGSL: Advanced CRT Simulation Engine
 
+![Platform](https://img.shields.io/badge/platform-Android-green?logo=android)
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=android&logoColor=white)
+![PoC](https://img.shields.io/badge/type-PoC-blueviolet)
+![Min-SDK](https://img.shields.io/badge/Min--SDK-33%2B-orange.svg)
+![AGSL](https://img.shields.io/badge/AGSL-enabled-0D47A1?logo=opengl&logoColor=white)
+![Performance](https://img.shields.io/badge/optimized-for%20realtime-blue)
 
 
 **Cathode-AGSL** is a high-fidelity post-processing engine for Android Jetpack Compose that physically emulates the behavior of Cathode Ray Tube (CRT) monitors and the thermal reaction of phosphor. 
