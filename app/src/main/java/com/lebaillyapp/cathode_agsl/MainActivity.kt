@@ -63,8 +63,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             CathodeAGSLTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+
+                    //todo - 1 - Text demo
                     //CathodeComposition(textToLoad = R.raw.demo_stress_test)
+
+
+                    //todo - 2 - Gallery demo
                     CathodeGalleryScreen()
+
                 }
             }
         }
